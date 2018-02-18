@@ -1,0 +1,6 @@
+proto_library(
+    name = "learner_proto",
+    srcs = ["learner.proto"],
+    visibility = ["//visibility:public"],
+)
+

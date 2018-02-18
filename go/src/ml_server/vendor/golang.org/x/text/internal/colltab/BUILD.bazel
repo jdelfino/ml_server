@@ -1,0 +1,21 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "collelem.go",
+        "colltab.go",
+        "contract.go",
+        "iter.go",
+        "numeric.go",
+        "table.go",
+        "trie.go",
+        "weighter.go",
+    ],
+    importpath = "golang.org/x/text/internal/colltab",
+    visibility = ["//go/src/ml_server/vendor/golang.org/x/text:__subpackages__"],
+    deps = [
+        "//go/src/ml_server/vendor/golang.org/x/text/language:go_default_library",
+        "//go/src/ml_server/vendor/golang.org/x/text/unicode/norm:go_default_library",
+    ],
+)

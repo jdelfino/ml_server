@@ -1,0 +1,16 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = ["serverreflection.go"],
+    importpath = "google.golang.org/grpc/reflection",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//go/src/ml_server/vendor/github.com/golang/protobuf/proto:go_default_library",
+        "//go/src/ml_server/vendor/github.com/golang/protobuf/protoc-gen-go/descriptor:go_default_library",
+        "//go/src/ml_server/vendor/google.golang.org/grpc:go_default_library",
+        "//go/src/ml_server/vendor/google.golang.org/grpc/codes:go_default_library",
+        "//go/src/ml_server/vendor/google.golang.org/grpc/reflection/grpc_reflection_v1alpha:go_default_library",
+        "//go/src/ml_server/vendor/google.golang.org/grpc/status:go_default_library",
+    ],
+)

@@ -1,0 +1,20 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_binary", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = ["backend.go"],
+    importpath = "github.com/example/project/go/src/ml_server/backend",
+    visibility = ["//visibility:private"],
+    deps = [
+        "//go/src:learner_go_lib",
+        "//go/src/ml_server/vendor/golang.org/x/net/context:go_default_library",
+        "//go/src/ml_server/vendor/google.golang.org/grpc:go_default_library",
+        "//go/src/ml_server/vendor/google.golang.org/grpc/reflection:go_default_library",
+    ],
+)
+
+go_binary(
+    name = "backend",
+    embed = [":go_default_library"],
+    visibility = ["//visibility:public"],
+)

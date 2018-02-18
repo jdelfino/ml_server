@@ -1,0 +1,25 @@
+syntax = "proto3";
+package learner;
+
+message DataPoint {
+  float obs = 1;
+  repeated float vars = 2;
+};
+
+message Matrix {
+  repeated DataPoint data_point = 1;
+};
+
+message RegressRequest {
+  Matrix train = 1;
+  DataPoint predict = 2;
+};
+
+message RegressResponse {
+  float prediction = 1;
+};
+
+service Learner {
+  // Sends a greeting
+  rpc Regress (RegressRequest) returns (RegressResponse) {}
+};
