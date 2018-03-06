@@ -1,3 +1,4 @@
+# Go rules
 http_archive(
     name = "io_bazel_rules_go",
     url = "https://github.com/bazelbuild/rules_go/releases/download/0.9.0/rules_go-0.9.0.tar.gz",
@@ -13,3 +14,21 @@ go_rules_dependencies()
 go_register_toolchains()
 load("@bazel_gazelle//:deps.bzl", "gazelle_dependencies")
 gazelle_dependencies()
+
+# Docker rules
+git_repository(
+    name = "io_bazel_rules_docker",
+    remote = "https://github.com/bazelbuild/rules_docker.git",
+    tag = "v0.4.0",
+)
+
+load("@io_bazel_rules_go//go:def.bzl", "go_repositories")
+
+go_repositories()
+
+load(
+    "@io_bazel_rules_docker//go:image.bzl",
+    _go_image_repos = "repositories",
+)
+
+_go_image_repos()

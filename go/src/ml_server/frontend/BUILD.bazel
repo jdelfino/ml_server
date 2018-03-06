@@ -1,4 +1,5 @@
 load("@io_bazel_rules_go//go:def.bzl", "go_binary", "go_library")
+load("@io_bazel_rules_docker//go:image.bzl", "go_image")
 
 go_binary(
     name = "frontend",
@@ -16,4 +17,10 @@ go_library(
         "//go/src/ml_server/vendor/golang.org/x/net/context:go_default_library",
         "//go/src/ml_server/vendor/google.golang.org/grpc:go_default_library",
     ],
+)
+
+go_image(
+    name = "frontend_image",
+    embed = [":go_default_library"],
+    visibility = ["//visibility:public"],
 )
