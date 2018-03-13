@@ -1,25 +1,44 @@
 # ml_server
 
-Go server with frontend and backends that, in theory, could talk to each other if a k8s config existed. Go dependencies are vendored (i.e. fully contained in the checkout).
+Go server with frontend and backends that, in theory, can talk to each other. Go dependencies are vendored (i.e. fully contained in the checkout). Lots of hacks, hardcoding, etc, but end result is nice.
 
-To build:
+Presetup (once per machine):
 ```bash
-cd <ml_server checkout root>
-TAG="<username>/buildenv:latest"
-docker build -t $TAG go/buildenv
-# start the container, mount the cwd as a volume at /usr/src/app in the container
-# TODO: needing to mount the bazel cache is funky
-docker run -t -d --name build -u bazel-user -v "$PWD":/usr/src/app -v "$HOME/.cache/bazel:/home/bazel-user/.cache/bazel" $TAG
-# run the build command
-docker exec build bazel build go/src/...
+# 1. Install jdk8: http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html
+# 2. Install brew (from: https://brew.sh/)
 
-...
-# later, clean up:
-docker stop build
-# nuke the container if you don't want it anymore
-docker rm build
+/usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
+
+# 3. Install bazel (from: https://docs.bazel.build/versions/master/install.html) 
+
+brew install bazel
+
+# 4. Install minikube (from: https://kubernetes.io/docs/tutorials/stateless-application/hello-minikube/)
+
+curl -Lo minikube https://storage.googleapis.com/minikube/releases/latest/minikube-darwin-amd64 && \
+  chmod +x minikube && \
+  sudo mv minikube /usr/local/bin/
+
+brew install docker-machine-driver-xhyve
+sudo chown root:wheel $(brew --prefix)/opt/docker-machine-driver-xhyve/bin/docker-machine-driver-xhyve
+sudo chmod u+s $(brew --prefix)/opt/docker-machine-driver-xhyve/bin/docker-machine-driver-xhyve
+
+brew install kubectl
 ```
 
-It will take a few minutes the first time, but the docker container will stay running and maintain a cache, and subsequent builds will be fast. Build output will be written to the root of the project checkout.
+Setup (once per reboot/logon):
+```bash
+# 1. Start minikube
+minikube start --vm-driver=xhyve
+# 2. Set minikube to default env for kubectl
+eval $(minikube docker-env)
+```
 
-Kubernetes/minikube deployment coming next...
+Build/Run server:
+```bash
+# This will build the go code, build docker images, push them to jdelfino's docker hub, then launch the cluster in your local minikube.
+# Time for successive rebuild of frontend & backend and redeploy: 7.5s!
+bazel run --cpu=k8 go/src/ml_server:server.apply
+```
+
+I haven't actually tested to see if the frontend & backend talk successfully to each other, or whether the frontend properly exposes an external endpoint, but they do at least build and start.
