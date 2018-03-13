@@ -26,7 +26,7 @@ gazelle_dependencies()
 git_repository(
     name = "io_bazel_rules_docker",
     remote = "https://github.com/bazelbuild/rules_docker.git",
-    tag = "v0.4.0",
+    commit = "93b5a921657304b8641e2df5cb1115b8142212a1",
 )
 
 load("@io_bazel_rules_go//go:def.bzl", "go_repositories")
@@ -39,3 +39,29 @@ load(
 )
 
 _go_image_repos()
+
+load(
+  "@io_bazel_rules_docker//container:container.bzl",
+  "container_pull", "container_push",
+  container_repositories = "repositories",
+)
+
+container_repositories()
+
+# This requires rules_docker to be fully instantiated before
+# it is pulled in.
+git_repository(
+    name = "io_bazel_rules_k8s",
+    commit = "4348f8e28b70cf3aff7ca8e008e8dc7ac49bad92",
+    remote = "https://github.com/bazelbuild/rules_k8s.git",
+)
+
+load("@io_bazel_rules_k8s//k8s:k8s.bzl", "k8s_repositories", "k8s_defaults")
+
+k8s_repositories()
+
+k8s_defaults(
+    name = "k8s_deploy",
+    cluster = "minikube",
+    kind = "deployment",
+)

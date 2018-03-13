@@ -10,7 +10,7 @@ import (
 )
 
 const (
-	address = "backend:80"
+	address = "ml_server_backend:50052"
 )
 
 func handler(w http.ResponseWriter, r *http.Request) {
