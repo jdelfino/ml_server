@@ -39,6 +39,6 @@ Build/Run server:
 # This will build the go code, build docker images, push them to jdelfino's docker hub, then launch the cluster in your local minikube.
 # Time for successive rebuild of frontend & backend and redeploy: 7.5s!
 bazel run --cpu=k8 go/src/ml_server:server.apply
+# Opens a web browser to the frontend, which should show some hardcoded text.
+minikube service ml-server-frontend
 ```
-
-I haven't actually tested to see if the frontend & backend talk successfully to each other, or whether the frontend properly exposes an external endpoint, but they do at least build and start.
