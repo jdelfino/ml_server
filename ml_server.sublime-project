@@ -5,5 +5,10 @@
 			"path": ".",
 			"folder_exclude_patterns": ["bazel*", "go/pkg/dep", "go/src/ml_server/vendor"],
 		},
-	]
+	],
+    "settings": {
+        "golang": {
+            "GOPATH": "/code/personal/ml_server"
+        }
+    }
 }

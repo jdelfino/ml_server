@@ -10,7 +10,7 @@ import (
 )
 
 const (
-	address = "ml_server_backend:50052"
+	address = "ml-server-backend:50052"
 )
 
 func handler(w http.ResponseWriter, r *http.Request) {
@@ -34,20 +34,21 @@ func handler(w http.ResponseWriter, r *http.Request) {
 	// Set up a connection to the server.
 	conn, err := grpc.Dial(address, grpc.WithInsecure())
 	if err != nil {
-		log.Fatalf("did not connect: %v", err)
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
 	}
 	defer conn.Close()
 	c := learner.NewLearnerClient(conn)
 
 	resp, err := c.Regress(context.Background(), test)
 	if err != nil {
-		log.Fatalf("could not greet: %v", err)
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
 	}
-	fmt.Fprintf(w, "Prediction: %s", resp.Prediction)
-
+	fmt.Fprintf(w, "Prediction: %f", resp.Prediction)
 }
 
 func main() {
 	http.HandleFunc("/", handler)
-	http.ListenAndServe(":12827", nil)
+	http.ListenAndServe(":50051", nil)
 }

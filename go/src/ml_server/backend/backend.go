@@ -10,7 +10,7 @@ import (
 )
 
 const (
-	port = ":80"
+	port = ":50052"
 )
 
 // server is used to implement helloworld.GreeterServer.
@@ -18,7 +18,7 @@ type server struct{}
 
 // SayHello implements helloworld.GreeterServer
 func (s *server) Regress(ctx context.Context, in *learner.RegressRequest) (*learner.RegressResponse, error) {
-	return &learner.RegressResponse{Prediction: 9.99}, nil
+	return &learner.RegressResponse{Prediction: 9.91}, nil
 }
 
 func main() {
